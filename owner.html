@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>የትዕዛዝ ዝርዝር - አስተዳደር</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="ownerCss.css">
+</head>
+<body>
+  <div class="admin-container">
+    <header class="admin-header">
+      <h1><i class="fas fa-clipboard-list"></i> የትዕዛዝ ዝርዝር</h1>
+      <div class="header-actions">
+        <button id="refreshBtn" class="btn"><i class="fas fa-sync-alt"></i> አድስ</button>
+        <button id="clearAllBtn" class="btn danger"><i class="fas fa-trash"></i> ሁሉንም አጥፋ</button>
+      </div>
+    </header>
+
+    <div class="order-filters">
+      <div class="filter-group">
+        <label for="dateFilter"><i class="fas fa-calendar-alt"></i> በቀን ፈልግ:</label>
+        <input type="date" id="dateFilter">
+      </div>
+      <div class="filter-group">
+        <label for="searchFilter"><i class="fas fa-search"></i> ፈልግ:</label>
+        <input type="text" id="searchFilter" placeholder="በደንበኛ ስም ወይም ስልክ...">
+      </div>
+    </div>
+
+    <div class="orders-summary">
+      <div class="summary-card">
+        <h3>ጠቅላላ ትዕዛዞች</h3>
+        <span id="totalOrders">0</span>
+      </div>
+      <div class="summary-card">
+        <h3>የዛሬ ትዕዛዞች</h3>
+        <span id="todayOrders">0</span>
+      </div>
+      <div class="summary-card">
+        <h3>ጠቅላላ ገቢ</h3>
+        <span id="totalRevenue">0 ብር</span>
+      </div>
+    </div>
+
+    <div class="orders-container" id="ordersContainer">
+      <div class="no-orders" id="noOrders">
+        <i class="fas fa-box-open"></i>
+        <p>ምንም ትዕዛዞች አልተገኙም</p>
+      </div>
+    </div>
+  </div>
+
+  
+</body>
+</html>
