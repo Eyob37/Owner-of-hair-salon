@@ -67,7 +67,6 @@ function fetchOrders() {
       });
       
       updateSummary();
-      displayOrders(filtered);
       filterOrders();
     } else {
       showNoOrders();
