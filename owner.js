@@ -68,7 +68,7 @@ function fetchOrders() {
       
       updateSummary();
       displayOrders(filtered);
-      //filterOrders();
+      filterOrders();
     } else {
       showNoOrders();
     }
