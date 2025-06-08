@@ -46,6 +46,7 @@ function init() {
 }
 
 // Fetch orders from Firebase with the nested structure
+// Fetch orders from Firebase with the nested structure - Fixed version
 function fetchOrders() {
   onValue(ordersRef, (snapshot) => {
     allOrders = [];
@@ -59,9 +60,12 @@ function fetchOrders() {
         // Loop through each temporalId under phoneId
         Object.keys(phoneOrders).forEach(temporalId => {
           let order = phoneOrders[temporalId];
-          order.id = temporalId; // Use temporalId as order ID
-          order.phoneId = phoneId; // Store phoneId reference
-          allOrders.push(order);
+          // Make sure we're getting an actual order object
+          if (order && typeof order === 'object' && order.date) {
+            order.id = temporalId; // Use temporalId as order ID
+            order.phoneId = phoneId; // Store phoneId reference
+            allOrders.push(order);
+          }
         });
       });
       
@@ -116,21 +120,18 @@ function filterOrders() {
 
 // Display orders in the UI
 // Display orders in the UI
+// Display orders in the UI - Fixed version
 function displayOrders(orders) {
   if (orders.length === 0) {
     showNoOrders();
     return;
   }
-  
+
   // Sort by timestamp (newest first)
   orders.sort((a, b) => (b.timestemp || 0) - (a.timestemp || 0));
-  
-  // Clear the container first
- // ordersContainer.innerHTML = '';
-  
-  // Create a document fragment for better performance
-  const fragment = document.createDocumentFragment();
-  
+
+  ordersContainer.innerHTML = '';
+
   orders.forEach(order => {
     let orderCard = document.createElement('div');
     orderCard.className = 'order-card';
@@ -175,13 +176,9 @@ function displayOrders(orders) {
       </div>
     `;
     
-    // Append each order card to the fragment
-    fragment.appendChild(orderCard);
+    ordersContainer.appendChild(orderCard);
   });
-  
-  // Append all orders at once to the container
-  ordersContainer.appendChild(fragment);
-  
+
   // Add event listeners to delete buttons
   document.querySelectorAll('.delete-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
