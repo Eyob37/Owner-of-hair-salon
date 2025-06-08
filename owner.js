@@ -58,12 +58,9 @@ function fetchOrders() {
         const phoneOrders = ordersData[phoneId];
         
         // Loop through each temporalId under phoneId
-        Object.keys(phoneOrders).forEach(temporalId => {
-          let order = phoneOrders[temporalId];
-          // Make sure we're getting an actual order object
-          if (order && typeof order === 'object' && order.date) {
-            order.id = temporalId; // Use temporalId as order ID
-            order.phoneId = phoneId; // Store phoneId reference
+        Object.entries(phoneOrders).forEach(([temporalId, orderData]) => {
+          if (orderData && typeof orderData === 'object' && orderData.date) {
+            const order = { ...orderData, id: temporalId, phoneId };
             allOrders.push(order);
           }
         });
