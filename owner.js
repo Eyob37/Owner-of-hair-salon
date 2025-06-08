@@ -103,8 +103,8 @@ function filterOrders() {
   if (searchValue) {
     filtered = filtered.filter(order => 
       (order.name && order.name.toLowerCase().includes(searchValue)) || 
-      (order.phone && order.phone.includes(searchValue));
-    });
+      (order.phone && order.phone.includes(searchValue)));
+    }
   
   displayOrders(filtered);
 }
