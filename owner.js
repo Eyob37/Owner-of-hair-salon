@@ -115,6 +115,7 @@ function filterOrders() {
 }
 
 // Display orders in the UI
+// Display orders in the UI
 function displayOrders(orders) {
   if (orders.length === 0) {
     showNoOrders();
@@ -124,7 +125,11 @@ function displayOrders(orders) {
   // Sort by timestamp (newest first)
   orders.sort((a, b) => (b.timestemp || 0) - (a.timestemp || 0));
   
+  // Clear the container first
   ordersContainer.innerHTML = '';
+  
+  // Create a document fragment for better performance
+  const fragment = document.createDocumentFragment();
   
   orders.forEach(order => {
     let orderCard = document.createElement('div');
@@ -170,8 +175,12 @@ function displayOrders(orders) {
       </div>
     `;
     
-    ordersContainer.appendChild(orderCard);
+    // Append each order card to the fragment
+    fragment.appendChild(orderCard);
   });
+  
+  // Append all orders at once to the container
+  ordersContainer.appendChild(fragment);
   
   // Add event listeners to delete buttons
   document.querySelectorAll('.delete-btn').forEach(btn => {
