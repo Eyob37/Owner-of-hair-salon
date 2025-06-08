@@ -5,8 +5,6 @@ import {
   onValue, 
   query, 
   orderByChild, 
-  startAt, 
-  endAt,
   remove 
 } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
@@ -47,17 +45,24 @@ function init() {
   setupEventListeners();
 }
 
-// Fetch orders from Firebase
+// Fetch orders from Firebase with the nested structure
 function fetchOrders() {
   onValue(ordersRef, (snapshot) => {
     allOrders = [];
     let ordersData = snapshot.val();
     
     if (ordersData) {
+      // Loop through each phoneId
       Object.keys(ordersData).forEach(phoneId => {
-        let order = ordersData[phoneId];
-        order.id = phoneId; // Add phoneId as order ID
-        allOrders.push(order);
+        const phoneOrders = ordersData[phoneId];
+        
+        // Loop through each temporalId under phoneId
+        Object.keys(phoneOrders).forEach(temporalId => {
+          let order = phoneOrders[temporalId];
+          order.id = temporalId; // Use temporalId as order ID
+          order.phoneId = phoneId; // Store phoneId reference
+          allOrders.push(order);
+        });
       });
       
       updateSummary();
@@ -104,7 +109,7 @@ function filterOrders() {
     filtered = filtered.filter(order => 
       (order.name && order.name.toLowerCase().includes(searchValue)) || 
       (order.phone && order.phone.includes(searchValue)));
-    }
+  }
   
   displayOrders(filtered);
 }
@@ -154,12 +159,12 @@ function displayOrders(orders) {
         </div>
       </div>
       <div class="customer-info">
-        <h3><i class="fas fa-user"></i> �ዜጋ መረጃ</h3>
+        <h3><i class="fas fa-user"></i> ደንበኛ መረጃ</h3>
         <p><strong>ስም:</strong> ${order.name || 'N/A'}</p>
         <p><strong>ስልክ:</strong> ${order.phone || 'N/A'}</p>
       </div>
       <div class="order-actions">
-        <button class="btn danger delete-btn" data-id="${order.id}">
+        <button class="btn danger delete-btn" data-phoneid="${order.phoneId}" data-temporalid="${order.id}">
           <i class="fas fa-trash"></i> ሰርዝ
         </button>
       </div>
@@ -171,16 +176,17 @@ function displayOrders(orders) {
   // Add event listeners to delete buttons
   document.querySelectorAll('.delete-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
-      const orderId = e.target.closest('.delete-btn').dataset.id;
-      deleteOrder(orderId);
+      const phoneId = e.target.closest('.delete-btn').dataset.phoneid;
+      const temporalId = e.target.closest('.delete-btn').dataset.temporalid;
+      deleteOrder(phoneId, temporalId);
     });
   });
 }
 
-// Delete an order
-function deleteOrder(orderId) {
+// Delete an order with the nested structure
+function deleteOrder(phoneId, temporalId) {
   if (confirm('እርግጠኛ ነዎት ይህን ትዕዛዝ መሰረዝ ይፈልጋሉ?')) {
-    const orderRef = ref(database, `hairSalon/${orderId}`);
+    const orderRef = ref(database, `hairSalon/${phoneId}/${temporalId}`);
     remove(orderRef)
       .then(() => {
         alert('ትዕዛዙ በትክክል ተሰርዟል!');
@@ -192,7 +198,7 @@ function deleteOrder(orderId) {
   }
 }
 
-// Clear all orders
+// Clear all orders (now needs to handle nested structure)
 function clearAllOrders() {
   if (confirm('እርግጠኛ ነዎት ሁሉንም ትዕዛዞች ማጥፋት ይፈልጋሉ? ይህ ተገላቢጦሽ አይደለም!')) {
     remove(ordersRef)
