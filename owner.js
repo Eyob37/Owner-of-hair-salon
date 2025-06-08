@@ -126,7 +126,7 @@ function displayOrders(orders) {
   orders.sort((a, b) => (b.timestemp || 0) - (a.timestemp || 0));
   
   // Clear the container first
-  ordersContainer.innerHTML = '';
+ // ordersContainer.innerHTML = '';
   
   // Create a document fragment for better performance
   const fragment = document.createDocumentFragment();
